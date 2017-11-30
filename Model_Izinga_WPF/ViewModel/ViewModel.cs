@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Model_Izinga_WPF.Model;
 using System.Windows.Input;
@@ -59,7 +57,7 @@ namespace Model_Izinga_WPF.ViewModel
                 PlotModel.Axes.Clear();
                 PlotModel.Series.Clear();
             }
-            
+
             public void Update()
             {
                 Clear();
@@ -104,13 +102,9 @@ namespace Model_Izinga_WPF.ViewModel
             LinearAxis Y { get; set; }
             private string y_axis_name;
             private string y_axis_unit;
-
-            //private List<Point> points;
+            
             public List<Point> Points;
-            //{
-            //    get { return points; }
-            //    set { points = value; }
-            //}
+            
         }
         private int b;
         public int B { get { return b; } set { b = value; OnPropertyChanged(); } }
@@ -150,44 +144,11 @@ namespace Model_Izinga_WPF.ViewModel
             set { upperValue = value; OnPropertyChanged(); }
         }
 
-        //private List<Point> mpoints;
-        //public IEnumerable<Point> MPoints
-        //{
-        //    get { return mpoints; }
-        //}
-        //private List<Point> cpoints;
-        //public IEnumerable<Point> CPoints
-        //{
-        //    get { return cpoints; }
-        //}
-        //private List<Point> upoints;
-        //public IEnumerable<Point> UPoints
-        //{
-        //    get { return upoints; }
-        //}
-        //private List<Point> epoints;
-        //public List<Point> EPoints
-        //{
-        //    get { return epoints; }
-        //    set { epoints = value; OnPropertyChanged(); }
-        //}
-
         private readonly RelayCommand mSolve;
         public ICommand SolveCommand { get { return mSolve; } }
 
         ModelIzinga model;
-        //private LineSeries FirstSeries;
-        //public PlotModel EPlotModel { get; set; }
 
-        //private LineSeries U_FirstSeries;
-        //public PlotModel UPlotModel { get; set; }
-        //private LineSeries C_FirstSeries;
-        //public PlotModel CPlotModel { get; set; }// Теплоемкость
-        //private LineSeries M_FirstSeries;
-        //public PlotModel MPlotModel { get; set; }//Намагниченность
-
-        //LinearAxis X;
-        //LinearAxis Y;
         public GraphicModel eModel { get; set; }
         public GraphicModel uModel { get; set; }
         public GraphicModel cModel { get; set; }
@@ -209,10 +170,6 @@ namespace Model_Izinga_WPF.ViewModel
             cModel = new GraphicModel("C(T)", "E", "Дж");
             mModel = new GraphicModel("M(T)", "E", "Дж");
 
-            //mpoints = new List<Point>();
-            //upoints = new List<Point>();
-            //cpoints = new List<Point>();
-            //epoints = new List<Point>();
             Solve(null);
             mSolve = new RelayCommand(Solve);
         }
@@ -286,17 +243,17 @@ namespace Model_Izinga_WPF.ViewModel
 
             double x_point = lowerValue;
             double step = 1.0;
+            Tuple<double, double, double> ucm = new Tuple<double, double, double>(0, 0, 0);
             while (x_point <= upperValue)
             {
                 eModel.Points.Add(new Point(x_point, model.Run(x_point, J, B).Item2));
 
-                //cModel.Points.Add(new Point(x_point, model.GetC(x_point, J, B).Item2));
-                //mModel.Points.Add(new Point(x_point, model.GetM(x_point, J, B).Item2));
-                //uModel.Points.Add(new Point(x_point, model.GetU(x_point, J, B).Item2));
+                ucm = model.CalculateDynamicValues(x_point);
 
-                uModel.Points = new List<Point>();
-                cModel.Points = new List<Point>();
-                mModel.Points = new List<Point>();
+                uModel.Points.Add(new Point(x_point, ucm.Item1));
+                cModel.Points.Add(new Point(x_point, ucm.Item2));
+                mModel.Points.Add(new Point(x_point, ucm.Item3));
+
                 //Add points for other models
 
                 x_point += step;
