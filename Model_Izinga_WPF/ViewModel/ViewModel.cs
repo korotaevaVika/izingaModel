@@ -45,6 +45,7 @@ namespace Model_Izinga_WPF.ViewModel
                 Points = new List<Point>();
 
                 PlotModel = new PlotModel();
+                PlotModel.TitleFontSize = 14;
                 PlotModel.Title = title;
                 FirstSeries = new LineSeries();
                 X = new LinearAxis();
@@ -69,7 +70,7 @@ namespace Model_Izinga_WPF.ViewModel
                     Maximum = Points.Count != 0 ? (Points.Max(x => x.X) + 1) : 0,
                     IsZoomEnabled = true,
                     Title = "T",
-                    Unit = null,
+                    Unit = "K",
                     TickStyle = TickStyle.Outside
                 };
                 Y = new LinearAxis()
@@ -162,13 +163,13 @@ namespace Model_Izinga_WPF.ViewModel
             H = 5;
             W = 5;
 
-            N = 22;
+            N = 25;
             LowerValue = 1;
             UpperValue = 10;
-            eModel = new GraphicModel("E(T)", "E", "Дж");
-            uModel = new GraphicModel("U(T)", "E", "Дж");
-            cModel = new GraphicModel("C(T)", "E", "Дж");
-            mModel = new GraphicModel("M(T)", "E", "Дж");
+            eModel = new GraphicModel("E(T) - Энергия", "E", "Дж");
+            uModel = new GraphicModel("U(T) - Средняя энергия", "U", "Дж");
+            cModel = new GraphicModel("C(T) - Теплоемкость", "C", "Дж/(кг·К)");
+            mModel = new GraphicModel("M(T) - Намагниченность", "M", "");
 
             Solve(null);
             mSolve = new RelayCommand(Solve);
